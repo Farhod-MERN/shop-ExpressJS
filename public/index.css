@@ -1,0 +1,9 @@
+@import url(https://fonts.googleapis.com/css2?family=Merienda:wght@100;200;300;400;500;600;700&display=swap);
+
+body {
+  font-family: 'Merienda', handwriting;
+  background: rgb(194, 243, 238);
+  background-repeat: no-repeat;
+  background-size: cover;
+  width: 100%;
+}

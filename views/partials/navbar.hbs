@@ -1,21 +1,35 @@
-<div class="container">
+<div class="border-bottom w-100 mb-2">
   <header
-    class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom"
+    class="d-flex flex-wrap justify-content-center pt-3 pb-2 mb-2 container"
   >
     <a
       href="/"
       class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none"
     >
-      <span class="fs-4 fw-bold"> <i class="bi bi-shop-window"></i> SHOP</span>
+      <span class="fs-4"> <i class="bi bi-shop-window"></i> SHOP</span>
     </a>
 
-    <ul class="nav nav-pills">
-      <li class="nav-item"><a href="/products" class="nav-link">Products</a></li>
-      <li class="nav-item"><a href="/add" class="nav-link">Add</a></li>
-    </ul>
     <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+      {{#if isProducts}}
+      <button type="button" class="btn btn-primary"><a class="text-light text-decoration-none" href="/products" class="nav-link">Products</a></button>
+      {{else}}
+      <button type="button" class="btn btn-info"><a class="text-light text-decoration-none" href="/products" class="nav-link">Products</a></button>
+      {{/if}}
+      {{#if isAdd}}
+      <button type="button" class="btn btn-primary"><a class="text-light text-decoration-none" href="/add" class="nav-link">Add</a></button>
+      {{else}}
+      <button type="button" class="btn btn-info"> <a class="text-light text-decoration-none" href="/add" class="nav-link">Add</a></button>
+      {{/if}}
+      {{#if isLogin}}
+      <button type="button" class="btn btn-primary"><a class="text-light text-decoration-none" href="/login">Login</a></button>
+      {{else}}
       <button type="button" class="btn btn-info"><a class="text-light text-decoration-none" href="/login">Login</a></button>
+      {{/if}}
+      {{#if isRegister}}
       <button type="button" class="btn btn-primary"><a class="text-light text-decoration-none" href="/register">Register</a></button>
+      {{else}}
+      <button type="button" class="btn btn-info"><a class="text-light text-decoration-none" href="/register">Register</a></button>
+      {{/if}}
     </div>
   </header>
 </div>

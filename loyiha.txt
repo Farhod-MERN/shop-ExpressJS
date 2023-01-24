@@ -1,0 +1,215 @@
+express - nodejs uchun Framework
+
+npm i express
+	npm install nodemon -save-dev 
+
+yoki npm i nodemon -D	
+
+
+"type": "module", - import -export bilan ishlash uchun
+
+
+bearded theme
+
+
+import  express  from "express";
+const app = express()
+const PORT = process.env.PORT || 4100
+app.listen(PORT, ()=>{console.log(`Server is running on port: ${PORT}`);})
+	//terminalda- node index.js
+	// yokida package.json da yoz
+	// "start": "node index.js",
+	// "dev": "nodemon index.js"   npm run dev
+
+
+//import path, {dirname} from "path"
+//import { fileURLToPath } from "url";
+//	const __filename = fileURLToPath(import.meta.url)
+//	const __dirname =dirname(__filename)
+-------------------------------------------------------------
+
+handlebars - dvijok - dinamik web sayt yasash uchun
+
+npm i express-handlebars
+
+1- views > layout> main.hbs fayl bo'lishi shart
+	<!DOCTYPE html>
+	<html lang="en">
+		{{!-- HEADER --}}
+		{{>head}} // head da - head tegi ichida bootstrap linklar bor
+	<body>
+		{{!-- BODY --}}
+		<div class="container">
+			{{{body}}}
+		</div>
+
+		{{!-- FOOTER --}}
+		{{>footer}} // scriptlarni ulaganman
+	</body>
+	</html>
+2- head, footer lar esa partials > 
+	footer.hbs va head.hbs 
+
+3- index.js da 
+	import  express  from "express";
+	import { create } from "express-handlebars"
+	import authRoute from "./routes/auth.js"
+	import productRoute from "./routes/products.js"
+	const app = express()
+
+	const hbs = create({defaultLayout:"main",extname: "hbs"})
+
+	app.engine("hbs", hbs.engine)
+	app.set("view engine", "hbs")
+	app.set("views", "./views")
+	app.use(express.urlencoded({extended: true})) - json formatdan foydalanish uchun
+	app.use(express.static('public')) // public papkani statik qilib, qo'ydik, bu orqali ,u faylga hamma joydan qo'limiz boradi . E.x: head.hbs da <link rel="stylesheet" href="/index.css">
+	
+	app.use(authRoute)
+	app.use(productRoute)
+
+	const PORT = process.env.PORT || 4100
+	app.listen(PORT, ()=>{console.log(`Server is running on port: ${PORT}`);})
+4- routes> auth.js
+	import { Router } from "express";
+	const router = Router()
+	router.get("/register", (req, res)=>{
+		res.render("register")
+	})
+	router.get("/add", (req, res)=>{
+		res.render("add")
+	})
+	export default router
+	
+5- routes> products.js
+	import { Router } from "express";
+	const router = Router()
+	router.get('/', (req, res)=>{
+		res.render("index")
+	})
+	router.get("/products", (req, res)=>{
+		res.render("products")
+	})
+	router.get("/login", (req, res)=>{
+		res.render("login")
+	})
+	export default router
+
+6- formalar bilan ishlash
+	post va get ning farqi 
+	1- type="submit" bo'lgan button bosilsa post so'rov bo'ladi 
+	2- sahifa yuklanganda get so'rov bo'ladi
+
+	router.get("/login", (req, res)=>{
+	res.render("login",{
+		title : "App | Login",
+		isLogin : true
+	})
+	})
+	router.post("/login", (req, res)=>{
+	console.log(req.body);
+	res.redirect("/")
+	})
+	
+--------------------------------------------------------------
+
+middleware - bu qo'shimcha funksiya 
+ uni ishlatish 
+
+app.use(()=>{console.log("middleware")}) // bu get funksiyadan oldin ishlaydi
+app.get("/", ()=>{
+	res.render("index")
+})
+
+-----------------------------------------------------------------
+props , options 
+
+router.get("/add", (req, res)=>{
+   res.render("add", {
+      title : "App | Add",
+      isAdd : true
+   })
+})
+
+render 3ta param qabul qiladi , 2- props
+bu propslar 2 ta joyda bo'ladi , 
+	1- main.hbs da -> main.hbs da biz head, footer larni ishlatganmiz, shunga propslar ,ularda ham ishlaydi
+	2- qaysi fayldan yuborsak o'shanda , misol uchun tepada add.hbs dan yubordik, shunga bu propslar add.hbs da ham ishlaydi
+
+1- head.hbs da 
+	<title>{{title}}</title>
+
+2- navbar.hbs da 
+	{{#if isAdd}}
+      <button type="button" class="btn btn-primary"><a class="text-light text-decoration-none" href="/products" class="nav-link">Products</a></button>
+    {{else}}
+      <button type="button" class="btn btn-info"><a class="text-light text-decoration-none" href="/products" class="nav-link">Products</a></button>
+    {{/if}}
+
+---------------------------------------------------------------------------
+mongoDB bilan ishlash 
+1-
+	mongoDB.com 
+	// farhod
+	// gC8yiKkxmSmMGU8R
+2-
+	get my Current Ip qilasan , keyin Network Accsecc dan > edit qilib
+	Allow Access from anyWhere qilish shart, bo'lmasa IP o'zgarsa mangoDB ga kirolmaysan
+
+3- Database > connect > connect your application > 
+	Url ni ol 
+	mongodb+srv://farhod:<password>@cluster0.lqzadrs.mongodb.net/?retryWrites=true&w=majority
+
+4- nodejs va mangoDB ni mongoose orqali ulaysan
+	 npm i mongoose 
+	 index.js da 
+	 app.use(express.json()) // mangoDB json formatda ishlaydi , shunga
+
+import mongoose from "mongoose";
+https://www.section.io/engineering-education/nodejs-mongoosejs-mongodb/
+
+mongoose.connect(process.env.MONGO_URL, {
+    useNewUrlParser: true,
+    useFindAndModify: false,
+    useUnifiedTopology: true
+}, ()=>{
+    console.log("MongoDB connected ");
+})
+mongoose.set('strictQuery', false);
+
+
+5- mongoDB dagi url ni .env ga qo'yish kerak, .env ni ishlatish uchun esa
+	npm install dotenv 
+https://www.npmjs.com/package/dotenv
+
+	index.js da 
+		import * as dotenv from 'dotenv' 
+		dotenv.config()
+6- model yaratish 
+	models > User.js 
+	import { Schema, model } from "mongoose"
+
+	const UserSchema = new Schema({
+		firstName : {type :String, required : true},
+		lastName : {type: String, required : true},
+		email: {type: String ,required : true, unique : true},
+		password : {type: String, required: true}
+	})
+	const User = model("User", UserSchema)
+	export default User
+7- auth.js da 
+
+import User from "../models/User.js"
+
+router.post("/register", async (req, res)=>{
+  const userData = {
+    firstName : req.body.firstname,
+    lastName : req.body.lastname,
+    email: req.body.email,
+    password : req.body.password
+  }
+  const user = await User.create(userData)
+  console.log(user);
+  
+  res.redirect("/")
+ })

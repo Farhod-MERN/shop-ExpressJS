@@ -1,1 +1,16 @@
-<h1>Login</h1>
+<div class="text-center w-75 mx-auto">
+<form action="/login" method="post" class="form-signin">
+      <img class="mb-3" src="https://cdn-icons-png.flaticon.com/512/5087/5087579.png" alt="" width="72" height="72">
+      <h1 class="h3 mb-3 font-weight-normal">Please login</h1>
+      <label for="inputEmail" class="sr-only my-2">Email address</label>
+      <input name="email" type="email" id="inputEmail" class="form-control" placeholder="Email address" required="" autofocus="">
+      <label for="inputPassword" class="sr-only my-2">Password</label>
+      <input name="password" type="password" id="inputPassword" class="form-control" placeholder="Password" required="">
+      <div class="checkbox mb-3">
+        <label class="my-2">
+          <input name="checkbox" type="checkbox"> Remember me
+        </label>
+      </div>
+      <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
+    </form>
+</div>
