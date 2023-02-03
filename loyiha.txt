@@ -10,7 +10,7 @@ yoki npm i nodemon -D
 
 
 bearded theme
-
+ 
 
 import  express  from "express";
 const app = express()
@@ -28,11 +28,11 @@ app.listen(PORT, ()=>{console.log(`Server is running on port: ${PORT}`);})
 //	const __dirname =dirname(__filename)
 -------------------------------------------------------------
 
-handlebars - dvijok - dinamik web sayt yasash uchun
+handlebars - dvijok - dinamik web sayt yasash uchun, html filelar bilan ishlash uchun
 
 npm i express-handlebars
 
-1- views > layout> main.hbs fayl bo'lishi shart
+1- views > layouts> main.hbs fayl bo'lishi shart
 	<!DOCTYPE html>
 	<html lang="en">
 		{{!-- HEADER --}}
@@ -62,7 +62,7 @@ npm i express-handlebars
 	app.engine("hbs", hbs.engine)
 	app.set("view engine", "hbs")
 	app.set("views", "./views")
-	app.use(express.urlencoded({extended: true})) - json formatdan foydalanish uchun
+	app.use(express.urlencoded({extended: true})) - json formatdan foydalanish uchun - buni yozish shart !!!
 	app.use(express.static('public')) // public papkani statik qilib, qo'ydik, bu orqali ,u faylga hamma joydan qo'limiz boradi . E.x: head.hbs da <link rel="stylesheet" href="/index.css">
 	
 	app.use(authRoute)
@@ -178,13 +178,14 @@ mongoose.connect(process.env.MONGO_URL, {
 mongoose.set('strictQuery', false);
 
 
-5- mongoDB dagi url ni .env ga qo'yish kerak, .env ni ishlatish uchun esa
+5- mongoDB dagi url ni .env ga qo'yish kerak, nodeJS .env ni ishlatish uchun esa
 	npm install dotenv 
 https://www.npmjs.com/package/dotenv
 
 	index.js da 
 		import * as dotenv from 'dotenv' 
 		dotenv.config()
+
 6- model yaratish 
 	models > User.js 
 	import { Schema, model } from "mongoose"
@@ -213,3 +214,102 @@ router.post("/register", async (req, res)=>{
   
   res.redirect("/")
  })
+ ------------------------------------------------------------
+password ni hash qilish 
+
+npm i bcrypt 
+
+auth.js da 
+
+router.post("/register", async (req, res)=>{
+  const hashedPassword = await bcrypt.hash(req.body.password, 10)
+
+  const userData = {
+    firstName : req.body.firstname,
+    lastName : req.body.lastname,
+    email: req.body.email,
+    password : hashedPassword,
+  }
+  const user = await User.create(userData)
+  console.log(user);
+  
+  res.redirect("/")
+ })
+ ----------------------------------------------------------------
+ -- validatsiyalar , xatoliklarni foydalanuvchiga ko'rsatish
+ npm i connect-flash - validatsiyalalr bilan ishlash uchun ,localStorage ga o'xshagan narsa bu
+ npm i express-session - bu flash uchun kerak
+
+index.js da 
+	import flash from "connect-flash"
+	import session from "express-session";
+
+	app.use(session({
+	secret: 'keyboard cat',
+	resave: false,
+	saveUninitialized: false
+	}))
+	app.use(flash())
+
+auth.js da 
+	router.get("/register", (req, res)=>{
+    res.render("register",{
+      title : "App | Register",
+      isRegister : true, 
+      registerError: req.flash("registerError")  // registerError ni login.hbs da ishlatganmiz, 
+    })
+
+router.post("/register", async (req, res)=>{
+  const hashedPassword = await bcrypt.hash(req.body.password, 10)
+
+  const {email, password, firstname, lastname} = req.body
+  if(!email || !password || !firstname || !lastname){
+    req.flash("registerError", "All fields is required") // 1- key, 2- qiymati, localStorage ga o'xshab , qiymat pastda yozilganiday req.flash("registerError") ishlatiladi
+    res.redirect("/register")
+    return
+  }
+ })
+
+	const candidate = await User.findOne({email: email})
+  	if(candidate){
+    	req.flash("registerError", "this email already exsist !")
+    	res.redirect("/register")
+    	return
+  				}
+ 	})
+
+------------------------------------------------------------------
+JWT - JSON Web Tokens 
+Har bir userga JWT beriladi . JWT da userning malumotlari saqlanadi . 
+Saytga login qilgandagi malumotlar ham JWT da saqlanadi shunga , saytni refresh qilsa ham saytdan chiqib ketmaydi
+JWT ni session, cookies, yokida localStorage larda saqlash mumkun, uni qancha vaqt saqlashni o'zimiz  belgilay olamiz
+
+npm i jsonwebtoken
+
+1- services > token.js da 
+	import jwt from "jsonwebtoken"
+
+import jwt from "jsonwebtoken"
+
+const generateJWTToken = (userId)=>{
+    const accessToken = jwt.sign({userId : userId}, process.env.JWT_SECRET, {expiresIn: "30d"} )
+    return accessToken
+}
+sign - yangi JWT yaratadi ,3- parametr oladi, Payload, secure key, Options 
+
+payloadga user Idsini berib yubordik, bu orqali keyin biz, JWT dan foydalanib userning qolgan malumotlarini olamiz
+
+JWT_SECRET=farhod_secret_key - process.env dagi kod, bu xavfsiz bo'lishi kerak
+
+expiresIn: "30d" , agar user 30 kun saytga kirmasa Bu JWT o'chib ketadi
+
+2- auth.js da post registerda
+	  const user = await User.create(userData)
+	
+  	  const token = generateJWTToken(user._id)
+      res.cookie("token", token, {httpOnly: true, secure: true})
+user uchun JWT yaratdik va uni cookies ga saqlab qo'ydik 
+
+shu ishni post login da ham qildim 
+	const token = generateJWTToken(existUser._id)
+    res.cookie("token", token, {httpOnly: true, secure: true})
