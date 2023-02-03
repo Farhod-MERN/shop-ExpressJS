@@ -15,20 +15,26 @@
       {{else}}
       <button type="button" class="btn btn-info"><a class="text-light text-decoration-none" href="/products" class="nav-link">Products</a></button>
       {{/if}}
-      {{#if isAdd}}
-      <button type="button" class="btn btn-primary"><a class="text-light text-decoration-none" href="/add" class="nav-link">Add</a></button>
+      {{#if token}}          
+          {{#if isAdd}}
+          <button type="button" class="btn btn-primary"><a class="text-light text-decoration-none" href="/add" class="nav-link">Add</a></button>
+          {{else}}
+          <button type="button" class="btn btn-info"> <a class="text-light text-decoration-none" href="/add" class="nav-link">Add</a></button>
+          {{/if}}
+
+          <button type="button" class="btn btn-danger"><a class="text-light text-decoration-none" href="/logout">Log out</a></button>
+
       {{else}}
-      <button type="button" class="btn btn-info"> <a class="text-light text-decoration-none" href="/add" class="nav-link">Add</a></button>
-      {{/if}}
-      {{#if isLogin}}
-      <button type="button" class="btn btn-primary"><a class="text-light text-decoration-none" href="/login">Login</a></button>
-      {{else}}
-      <button type="button" class="btn btn-info"><a class="text-light text-decoration-none" href="/login">Login</a></button>
-      {{/if}}
-      {{#if isRegister}}
-      <button type="button" class="btn btn-primary"><a class="text-light text-decoration-none" href="/register">Register</a></button>
-      {{else}}
-      <button type="button" class="btn btn-info"><a class="text-light text-decoration-none" href="/register">Register</a></button>
+          {{#if isLogin}}
+          <button type="button" class="btn btn-primary"><a class="text-light text-decoration-none" href="/login">Login</a></button>
+          {{else}}
+          <button type="button" class="btn btn-info"><a class="text-light text-decoration-none" href="/login">Login</a></button>
+          {{/if}}
+          {{#if isRegister}}
+          <button type="button" class="btn btn-primary"><a class="text-light text-decoration-none" href="/register">Register</a></button>
+          {{else}}
+          <button type="button" class="btn btn-info"><a class="text-light text-decoration-none" href="/register">Register</a></button>
+          {{/if}}
       {{/if}}
     </div>
   </header>

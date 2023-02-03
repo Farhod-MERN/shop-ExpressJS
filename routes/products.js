@@ -14,6 +14,11 @@ router.get('/', (req, res)=>{
     })
  })
  router.get("/add", (req, res)=>{
+   if(!req.cookies.token){
+      res.redirect("/")
+      return
+   }
+
    res.render("add", {
       title : "App | Add",
       isAdd : true

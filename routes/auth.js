@@ -6,7 +6,12 @@ import { generateJWTToken } from "../services/token.js";
 const router = Router()
 
 router.get("/register", (req, res)=>{
-    res.render("register",{
+  if(req.cookies.token){
+    res.redirect("/")
+    return
+  }
+  
+  res.render("register",{
       title : "App | Register",
       isRegister : true, 
       registerError: req.flash("registerError")
@@ -45,7 +50,11 @@ router.get("/register", (req, res)=>{
 
 
  router.get("/login", (req, res)=>{
-   res.render("login",{
+  if(req.cookies.token){
+    res.redirect("/")
+    return
+  } 
+  res.render("login",{
      title : "App | Login",
      isLogin : true, 
      loginError: req.flash("loginError")
@@ -76,6 +85,11 @@ router.post("/login", async (req, res)=>{
   const token = generateJWTToken(existUser._id)
   res.cookie("token", token, {httpOnly: true, secure: true})
   console.log(existUser);
+  res.redirect("/")
+})
+
+router.get("/logout",  (req, res)=>{
+  res.clearCookie("token")
   res.redirect("/")
 })
 

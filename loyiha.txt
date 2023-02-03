@@ -313,3 +313,25 @@ user uchun JWT yaratdik va uni cookies ga saqlab qo'ydik
 shu ishni post login da ham qildim 
 	const token = generateJWTToken(existUser._id)
     res.cookie("token", token, {httpOnly: true, secure: true})
+
+----------------------------------------------
+
+npm i cookie-parser	browserdagi cookies larni olish uchun
+
+index.js da 
+import cookieParser from "cookie-parser";
+
+app.use(cookieParser())
+
+middleware 
+---------------------
+middleware > var.js 
+	export default function (req, res, next){
+		const isAuth = req.cookies.token ? true : false  //req.cookies.token ni olish uchun cookie-parserdan foydalandik . bu browserdagi cookie
+		res.locals.token = isAuth   //bu bizga localni o'zgaruvchi yaratib beryapdi
+		next() //next yozmasang , bu middlewaredan keyingi functionlar ishlamay qoladi
+	}
+index.js da -----------
+import varMiddleware from "./middleware/var.js";
+
+app.use(varMiddleware)
