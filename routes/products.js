@@ -5,9 +5,12 @@ import Product from "../models/Products.js";
 
 const router = Router()
 
-router.get('/', (req, res)=>{
+router.get('/', async (req, res)=>{
+   const products = await Product.find().lean()
     res.render("index",{
       title : "App | Shop",
+      products : products,
+      isHome: true,
     })
  })
  router.get("/products", (req, res)=>{

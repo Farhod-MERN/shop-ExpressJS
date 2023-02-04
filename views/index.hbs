@@ -1,1 +1,33 @@
-<h1>Main page</h1>
+{{#if products.length }}
+<h3>Last Books for you ! ❤️</h3>
+<div class="d-flex flex-column flex-wrap flex-lg-row flex-md-row">
+  {{#each products}}
+    <div class="m-2" style="width: 630px;">
+    <div class="col-md-6 mb-4 position-relative" style="width: 100%;">
+      <div class="row g-0 border rounded overflow-hidden flex-md-row shadow-lg h-md-250 position-relative">
+        <div class="col p-4 d-flex flex-column position-static">
+          <div class="d-flex justify-content-between">
+            <strong class="d-inline-block mb-2 text-primary">{{username}}</strong>
+            <span><strong>$</strong>{{price}}.00</span>
+          </div>
+          <h4  class="mb-1">{{title}}</h4>
+          <p class="card-text mb-auto">{{description}}</p>
+           <div class="mb-1 "><strong>Upload: </strong> Nov 12 2023 <span class=" text-muted"></span></div>
+        </div>
+        <div class="col-auto d-sm-block d-md-block d-lg-block">
+         <img width="200px" src={{image}} alt="image">
+        </div>
+      </div>
+        <div class="position-absolute top-0 end-0 btn-group btn-group-sm" role="group" aria-label="Basic outlined example">
+            <button type="button" class="btn btn-success"><i class="bi bi-info-circle"></i></button>
+            <button type="button" class="btn btn-info"><i class="bi bi-pencil-square"></i></button>
+            <button type="button" class="btn btn-danger"><i class="bi bi-trash3"></i></button>
+        </div>
+    </div>
+   
+    </div>
+  {{/each}}
+</div>
+{{else}}
+    <h3>No products yet</h3>
+{{/if}}

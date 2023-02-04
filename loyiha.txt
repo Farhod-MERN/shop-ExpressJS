@@ -324,7 +324,7 @@ import cookieParser from "cookie-parser";
 
 app.use(cookieParser())
 
-middleware 
+middleware - user yo'yhatdan o'tgan yoki yo'qligini aniqlash uchun
 ---------------------
 middleware > var.js 
 	export default function (req, res, next){

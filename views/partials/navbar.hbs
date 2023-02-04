@@ -4,16 +4,21 @@
   >
     <a
       href="/"
-      class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none"
+      class="d-none d-lg-lex d-md-flex d-sm-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none"
     >
-      <span class="fs-4"> <i class="bi bi-shop-window"></i> SHOP</span>
+      <span class="fs-4"> <i class="bi bi-shop-window"></i> -Books</span>
     </a>
 
     <div class="btn-group" role="group" aria-label="Basic mixed styles example">
-      {{#if isProducts}}
-      <button type="button" class="btn btn-primary"><a class="text-light text-decoration-none" href="/products" class="nav-link">Products</a></button>
+      {{#if isHome}}
+      <button type="button" class="btn btn-primary"><a class="text-light text-decoration-none" href="/" class="nav-link">All Books</a></button>
       {{else}}
-      <button type="button" class="btn btn-info"><a class="text-light text-decoration-none" href="/products" class="nav-link">Products</a></button>
+      <button type="button" class="btn btn-info"><a class="text-light text-decoration-none" href="/" class="nav-link">All Books</a></button>
+      {{/if}}
+      {{#if isProducts}}
+      <button type="button" class="btn btn-primary"><a class="text-light text-decoration-none" href="/products" class="nav-link">My Books</a></button>
+      {{else}}
+      <button type="button" class="btn btn-info"><a class="text-light text-decoration-none" href="/products" class="nav-link">My Books</a></button>
       {{/if}}
        {{#if isAdd}}
           <button type="button" class="btn btn-primary"><a class="text-light text-decoration-none" href="/add" class="nav-link">Add</a></button>
