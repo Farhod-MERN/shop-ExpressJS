@@ -1,4 +1,7 @@
 import { Router } from "express";
+import authMiddleware from "../middleware/auth.js";
+import userMiddleware from "../middleware/user.js";
+import Product from "../models/Products.js";
 
 const router = Router()
 
@@ -13,16 +16,26 @@ router.get('/', (req, res)=>{
       isProducts : true
     })
  })
- router.get("/add", (req, res)=>{
-   if(!req.cookies.token){
-      res.redirect("/")
-      return
-   }
-
+ router.get("/add", authMiddleware, (req, res)=>{
    res.render("add", {
       title : "App | Add",
-      isAdd : true
+      isAdd : true,
+      errorAddProducts:  req.flash("errorAddProducts")
    })
+})
+router.post("/add-products", userMiddleware ,async (req, res)=>{
+   const {title, description,image, price, phone, username, address} = req.body
+   
+   if(!title || !description || !image || !price || !phone || !username || !address){
+      req.flash("errorAddProducts", "All fields is required")
+      res.redirect("/add")
+      return
+    }
+
+   const products = await Product.create({...req.body, user: req.userId})
+   console.log(products)
+   
+   res.redirect("/add")
 })
 
 export default router

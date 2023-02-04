@@ -195,7 +195,8 @@ https://www.npmjs.com/package/dotenv
 		lastName : {type: String, required : true},
 		email: {type: String ,required : true, unique : true},
 		password : {type: String, required: true}
-	})
+	}, {timestamps: true}) 2- paramga option bersa bo'ladi
+		buni vazifasi createdAt, va updateAt degan malumotlarni bizni bazadagi her bir elemga qo'shib beradi
 	const User = model("User", UserSchema)
 	export default User
 7- auth.js da 
@@ -328,10 +329,47 @@ middleware
 middleware > var.js 
 	export default function (req, res, next){
 		const isAuth = req.cookies.token ? true : false  //req.cookies.token ni olish uchun cookie-parserdan foydalandik . bu browserdagi cookie
-		res.locals.token = isAuth   //bu bizga localni o'zgaruvchi yaratib beryapdi
+		res.locals.token = isAuth   //bu bizga localni o'zgaruvchi yaratib beryapdi, bu token o'zgaruvchini navbar.hbs ga yubordim, agar token true bo'lsa log out chiqadi, aks holda login chiqadi
 		next() //next yozmasang , bu middlewaredan keyingi functionlar ishlamay qoladi
 	}
 index.js da -----------
 import varMiddleware from "./middleware/var.js";
 
 app.use(varMiddleware)
+
+-----------------------------------------------------------------------------------------
+
+Mahsulot qo'shayotgan paytda qo'shgan user malumotlarini olish
+
+middleware > user.js 
+	import jwt from "jsonwebtoken"
+	import User from "../models/User.js"
+
+	export default async function(req, res, next){
+		if(!req.cookies.token){
+			res.redirect("/login")
+			return
+		}
+
+		const token = req.cookies.token  // cookies dan tokenni oldik
+		const decode = jwt.verify(token, process.env.JWT_SECRET) // verify - decode qilish uchun kerak
+		const user = await User.findById(decode.userId)  // User -degan modelimizdan userni qidirdik id orqali
+		req.userId = user._id // req - ga biz yangi object qo'shib qo'ya olamiz , va uni products.js da ishlatdik , req.userId qilib
+
+		next()
+	}
+router > products.js 
+	router.post("/add-products", userMiddleware ,async (req, res)=>{
+	const {title, description,image, price, phone, username, address} = req.body
+	
+	if(!title || !description || !image || !price || !phone || !username || !address){
+		req.flash("errorAddProducts", "All fields is required")
+		res.redirect("/add")
+		return
+		}
+
+	const products = await Product.create({...req.body, user: req.userId}) // bu yerda mongoDBga user idsini ham qo'shib yuboryapmiz, req.userId bi middlewareda qo'shib qo'yganmiz
+	console.log(products)
+	
+	res.redirect("/add")
+	})

@@ -1,1 +1,77 @@
-<h1>add</h1>
+<div class="text-center w-75 mx-auto">
+   {{#if errorAddProducts}}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+  <strong>Error : </strong> {{errorAddProducts}}
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+  {{/if}}
+  <form action="/add-products" method="post" class="form-signin">
+    <h1 class="h3 mb-3 font-weight-normal">Add products</h1>
+    <input
+      name="title"
+      type="text"
+      id="title"
+      class="form-control my-3"
+      placeholder="Title"
+      autofocus=""
+    />
+    <div class="form-group">
+      <textarea
+        name="description"
+        class="form-control my-3"
+        id="exampleFormControlTextarea1"
+        rows="3"
+        placeholder="description"
+      ></textarea>
+    </div>
+    <input
+      name="image"
+      type="text"
+      id="image"
+      class="form-control my-3"
+      placeholder="Image or image's url"
+      autofocus=""
+    />
+    <div class="input-group mb-3">
+      <div class="input-group-prepend">
+        <span class="input-group-text" id="basic-addon1">$</span>
+      </div>
+      <input
+        type="number"
+        name="price"
+        class="form-control"
+        placeholder="price"
+        aria-label="Username"
+        aria-describedby="basic-addon1"
+      />
+    </div>
+    <input
+      name="username"
+      type="text"
+      id="title"
+      class="form-control my-3"
+      placeholder="User Name"
+      autofocus=""
+    />
+    <input
+      name="address"
+      type="text"
+      id="title"
+      class="form-control my-3"
+      placeholder="Your address"
+      autofocus=""
+    />
+    <input
+      name="phone"
+      type="number"
+      id="title"
+      class="form-control my-3"
+      placeholder="+998 xx xxx xx xx"
+      autofocus=""
+    />
+    <button
+      class="btn btn-lg btn-primary btn-block my-3"
+      type="submit"
+    >Add products</button>
+  </form>
+</div>

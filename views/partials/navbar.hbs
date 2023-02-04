@@ -15,13 +15,13 @@
       {{else}}
       <button type="button" class="btn btn-info"><a class="text-light text-decoration-none" href="/products" class="nav-link">Products</a></button>
       {{/if}}
-      {{#if token}}          
-          {{#if isAdd}}
+       {{#if isAdd}}
           <button type="button" class="btn btn-primary"><a class="text-light text-decoration-none" href="/add" class="nav-link">Add</a></button>
           {{else}}
           <button type="button" class="btn btn-info"> <a class="text-light text-decoration-none" href="/add" class="nav-link">Add</a></button>
           {{/if}}
-
+      {{#if token}}          
+  
           <button type="button" class="btn btn-danger"><a class="text-light text-decoration-none" href="/logout">Log out</a></button>
 
       {{else}}
