@@ -1,1 +1,36 @@
-<h1>products</h1>
+{{#if myProducts.length}}
+    <div class="row row-cols-1 row-cols-sm-1 row-cols-md-3 g-3">
+        {{#each myProducts}}
+            <div class="myCol">
+                <div class="myCard card shadow-sm">
+                    <div class="d-flex">
+                    <img class="m-1 mx-3" src={{image}} alt="" width="100px" height="100px">
+                    <div style="width: 100%;" class="mt-2 d-flex justify-content-around">
+                        <div class="avatar">{{getFullNameFirstElem user.firstName user.lastName}}</div>
+                       <div>
+                            <p class="m-0"><span class="fw-bold">User :</span> {{user.firstName}}</p>
+                            <p class="m-0"><span class="fw-bold">To Call :</span> +{{phone}}</p>
+                            <p class="m-0"><span class="fw-bold">Address :</span> {{address}}</p>
+                            <p class="m-0"><span class="fw-bold">Updated :</span> {{formatDate updatedAt}}</p>
+                       </div>
+                    </div>
+                    </div>
+                    <div class="card-body">
+                    <p class="card-text">{{description}}</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="btn-group">
+                        <a href="product/{{_id}}" type="button" class="btn btn-sm btn-outline-success">Detail</a>
+                        <button type="button" class="btn btn-sm btn-outline-info">Edit</button>
+                        <button type="button" class="btn btn-sm btn-outline-danger">Delete</button>
+                        </div>
+                        <small class="text-muted">${{price}}.00</small>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        {{/each}}
+    </div>
+{{else}}
+    <h3>No products yet 😔</h3><small>Please make sure You loggid in</small>
+{{/if}}
+

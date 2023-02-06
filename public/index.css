@@ -7,3 +7,60 @@ body {
   background-size: cover;
   width: 100%;
 }
+.books{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+.bookCard{
+  width: 630px;
+}
+.bookImage{
+  width: 200px;
+}
+.bookImage:hover{
+  filter: blur(1px);
+  transform: scale(1.05);
+}
+.stickyNavbar{
+  position: sticky;
+  top: 0px;
+  background-color: rgb(170, 245, 237);
+  z-index: 9999;
+}
+.avatar{
+  width: 50px;
+  height: 50px;
+  background-color: lightseagreen;
+  border-radius: 50%;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 10px 0 0 0 ;
+  padding: 0;
+  color: aliceblue;
+  font-size: 22px;
+  text-transform: uppercase;
+  cursor: pointer;
+  user-select: none;
+}
+
+@media (max-width:744px) {
+  .books{
+    display: flex;
+    flex-direction: column;
+  }
+  .bookCard{
+    width: 100%;
+  }
+  .mobileCard{
+    display: flex;
+    flex-direction: column;
+  }
+  .bookImage{
+    width: 80%;
+    display: block;
+    margin: 0 auto;
+  }
+}

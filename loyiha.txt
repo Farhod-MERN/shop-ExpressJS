@@ -373,3 +373,140 @@ router > products.js
 	
 	res.redirect("/add")
 	})
+-----------------------------------------------------------------
+1 -mongoDB dan malumot olish 
+	import Products from "../modulws/Products.js"
+
+	const products = Products.find().lean()
+	// find() bizga malumotlarni text holatda jo'natadi, lean() esa bizga u ni json qilib beradi
+	res.render("index", {
+		title: "Boom Shop",
+		products: products.reverce(), // reverce terskari tartiblab beradi
+	})
+2- sikl qilib malumotlarni ko'rsatish 
+	handlebars da forEach o'rniga each ishlatiladi 
+
+	<div class="wrapper">
+	{{#each products}}
+		<div class="item">{{title}} , {{price}}</div> //each bizga har bir objectni destrubtizatsiya qaytaradi, biz unidagi itemlarni to'gridan to'g'ri yozib ketaveramiz
+		lekin bu each ni ichida global o'zgaruvchilarni {{token}} qilib ishlata olmaymiz
+		ularni global ekanini aytishimiz kerak
+		{{@root.token}}
+	{{/each}}
+	</div>
+------------------------------------------------------------------------
+delete , edit ni faqat yaratuvchiga ko'rsatish
+
+1- Har bir postda user degan value bor, uni products yaratilayotganda qo'shganman
+
+2- Har bir req.UserId bor, uni middleware yordamida qo'shdim 
+index.js da => 	app.use(userMiddleware)
+
+3- User va UserId teng bo'lsa , delete va edit ni ko'rsataman
+
+----------------------------------------------------
+hbs helper 
+
+1- utils > index.js 
+	export default {
+		ifequal(a, b, options){
+		if(a == b) {
+			return options.fn(this) // agar a == b funksiya davom etadi
+		} 
+
+		return options.inverse(this) // aks holda , function will cancel
+		}
+	}
+2-  index.js da 
+    import hbsHelpers from "./utils/index.js"
+
+	const hbs = create({ defaultLayout: "main", extname: "hbs", helpers: hbsHelpers });
+
+3- index.hbs da 
+
+	{{#ifequal user @root.userId}} //
+              <button type="button" class="btn btn-info"><i class="bi bi-pencil-square"></i></button>
+              <button type="button" class="btn btn-danger"><i class="bi bi-trash3"></i></button>
+    {{/ifequal}}
+	2 ta param oladi, ular teng bo'lsa ishlidi, aks holsa yo'q
+	products dagi value larni shunday {{user}} qilib ishlata olamiz 
+	lekin global o'zgaruvchilarni @root.token , @root.userId qilib olishimiz kerak , each ni ichida 
+
+---------------------------------------------
+myProducts ni chiqarish 
+
+router.get("/products", async (req, res)=>{
+   const userCheck = req.userId ? req.userId.toString() : null
+   const myProducts = await Product.find({user : userCheck}).populate("user").lean()
+   console.log(myProducts)
+   res.render("products",{
+      title: "App | Products",
+      isProducts : true,
+      myProducts : myProducts
+    })
+ })
+
+find() //ni ichida filter berish mumkun
+populate("user") bu user objecttini yoyib beradi , pastda 1- va 2- holatlardagini ko'r 1-si populate siz
+populate- dan foydalanish uchun avval uni yaratilayotganda 
+modules > products.js da 
+	user: {type: Schema.Types.ObjectId, ref: "User"} shuni yozish kerak
+ref: "User" modelini bildiradi
+
+populate("user") esa . products modelidagi user valueni bildiradi
+
+1- holat
+user: new ObjectId("63df2c8a13e73c17e5cc4ed6"),
+2-holat
+user: {
+      _id: new ObjectId("63df2c8a13e73c17e5cc4ed6"),
+      firstName: 'f',
+      lastName: 's',
+      email: 'f@gmail.com',
+      password: '$2b$10$UBlszBCy9d6DoTkYQ0ouIOS/3EtfxnZmVVeKQqf3VXFc.gyhusuOu',
+      __v: 0
+    },
+---------------------------------------------------------
+product details 
+
+1-route > products.js da 
+	router.get("/product/:id",async (req, res)=>{
+	//req.params  - linkdagi unique narsa req.paramsga tushadi
+	const id = req.params.id
+	const product = await Product.findById(id).populate("user").lean()
+	console.log(product)
+	res.render("productDetail", {
+		product: product
+	})
+	})
+		"/product/:id" - unique bo'lishi kekak narsani : dan keyin yozmasan
+		u keyin req.params ga kelib tushadi
+
+2-views > index.hbs da 
+	 <a href="/product/{{_id}}" type="button" class="btn btn-success"><i class="bi bi-info-circle"></i></a>
+/product/{{_id}} -> har bir product , o'zini id si bilan shu linkga get so'rov qiladi
+
+-----------------------------------------------------------
+
+edit product
+1 - routers > products.js
+router.post("/edit-product/:id", async (req, res)=>{
+   const {title, description,image, price, phone, username, address} = req.body
+   const id = req.params.id
+
+   if(!title || !description || !image || !price || !phone || !username || !address){
+      req.flash("errorEditProducts", "All fields is required")
+      res.redirect("/edit-product")
+      return
+    }
+   
+    const product = await Product.findByIdAndUpdate(id, req.body, {new: true})
+	findByIdAndUpdate- 3 ta param oladi 3- {new: true} qilish shart
+
+
+   res.redirect("/products")
+})
+
+2 - edit-product.hbs
+
+<form action="/edit-product/{{product._id}}" method="post" class="form-signin">
