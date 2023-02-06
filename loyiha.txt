@@ -510,3 +510,21 @@ router.post("/edit-product/:id", async (req, res)=>{
 2 - edit-product.hbs
 
 <form action="/edit-product/{{product._id}}" method="post" class="form-signin">
+
+------------------------------------------------------
+delete product 
+
+index.hbs da 
+
+	<form action="/delete-product/{{_id}}" method="post">
+      <button type="submit" class="btn btn-danger"><i class="bi bi-trash3"></i></button>
+    </form>
+
+routers > product.js da
+
+	router.post("/delete-product/:id", async(req, res)=>{
+	const id = req.params.id
+	await Product.findByIdAndRemove(id)
+
+	res.redirect("/products")
+	})

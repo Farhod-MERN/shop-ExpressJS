@@ -17,6 +17,9 @@ export default {
     },
     formatDate(date){
         return moment(date).format("DD MMM, YYYY")
+    },
+    sliceText(text){
+        return text.toString().slice(0, 120)
     }
 
 }
