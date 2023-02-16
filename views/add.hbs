@@ -1,11 +1,12 @@
 <div class="container">
-<div class="text-center w-75 mx-auto">
+<div class="text-center w-75 mx-auto mb-5">
    {{#if errorAddProducts}}
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
   <strong>Error : </strong> {{errorAddProducts}}
   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
   {{/if}}
+  <h1 class="text-center text-success">{{success}}</h1>
   <form action="/add-products" method="post" class="form-signin">
     <h1 class="h3 mb-3 font-weight-normal">Add products</h1>
     <input
@@ -64,7 +65,7 @@
     />
     <input
       name="phone"
-      type="number"
+      type="tel"
       id="title"
       class="form-control my-3"
       placeholder="+998 xx xxx xx xx"

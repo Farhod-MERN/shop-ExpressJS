@@ -38,7 +38,8 @@ router.get('/', async (req, res)=>{
    res.render("add", {
       title : "App | Add",
       isAdd : true,
-      errorAddProducts:  req.flash("errorAddProducts")
+      errorAddProducts:  req.flash("errorAddProducts"),
+      success: req.flash("success")
    })
 })
 router.post("/add-products", userMiddleware ,async (req, res)=>{
@@ -51,6 +52,7 @@ router.post("/add-products", userMiddleware ,async (req, res)=>{
     }
 
    const products = await Product.create({...req.body, user: req.userId})
+   req.flash("success", "Product successfully added")
    // console.log(products)
    
    res.redirect("/add")

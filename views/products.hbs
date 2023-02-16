@@ -3,7 +3,7 @@
    <div class="container my-3">
      <div class="row row-cols-1 row-cols-sm-1 row-cols-md-3 g-3">
         {{#each myProducts}}
-            <div class="myCol">
+            <div class="myCol mb-5">
                 <div class="myCard card shadow-sm">
                     <div class="d-flex">
                     <img class="m-1 mx-3" src={{image}} alt="" width="100px" height="100px">
@@ -18,7 +18,7 @@
                     </div>
                     </div>
                     <div class="card-body">
-                    <p class="card-text">{{description}}</p>
+                    <p class="card-text">{{sliceText description}}</p>
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="btn-group">
                         <a href="product/{{_id}}" type="button" class="btn btn-sm btn-outline-success">Detail</a>
